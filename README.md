@@ -4,12 +4,13 @@ This repository contains several progressively improved versions of an image cla
 
 ## Model Versions Overview
 
-| Version | Description                            | Test Accuracy |
-|--------:|----------------------------------------|:-------------:|
-|   1     | Simple Dense Model                     |     41%       |
-|   2     | Increased Model Depth (more layers)    |     46%       |
-|   3     | Data Augmentation                      |     48%       |
-|   4     | Convolutional Neural Network (CNN)     |     75%       |
+| Version | Description                                      | Test Accuracy |
+|--------:|--------------------------------------------------|:-------------:|
+|   1     | Simple Dense Model                               |     41%       |
+|   2     | Increased Model Depth (more layers)              |     46%       |
+|   3     | Data Augmentation                                |     48%       |
+|   4     | Convolutional Neural Network (CNN)               |     74%       |
+|   5     | Deeper CNN + Learning Rate Scheduler             |     85%       |
 
 ---
 
@@ -26,7 +27,7 @@ model = Sequential([
 
 **Training Plot:**
 
-![Version 1 Plot](https://i.imgur.com/XDQwwhQ.png)
+<img src="https://i.imgur.com/XDQwwhQ.png" alt="Version 1 Plot" width="400"/>
 
 ---
 
@@ -48,7 +49,7 @@ model = Sequential([
 
 **Training Plot:**
 
-![Version 2 Plot](https://i.imgur.com/xMvszG4.png)
+<img src="https://i.imgur.com/xMvszG4.png" alt="Version 2 Plot" width="400"/>
 
 ---
 
@@ -75,11 +76,11 @@ def generator_with_flatten(datagen, X, y, batch_size):
 
 **Training Plot:**
 
-![Version 3 Plot](https://i.imgur.com/QqEQxJS.png)
+<img src="https://i.imgur.com/QqEQxJS.png" alt="Version 3 Plot" width="400"/>
 
 ---
 
-## Version 4 - Convolutional Neural Network (CNN) (75%)
+## Version 4 - Convolutional Neural Network (CNN) (74%)
 
 Switches to a CNN architecture to exploit the spatial structure of image data. The model includes convolutional, pooling, batch normalization, and dropout layers.
 
@@ -109,13 +110,58 @@ model = Sequential([
 
 **Training Plot:**
 
-![Version 4 Plot](https://i.imgur.com/EKgZUwo.png)
+<img src="https://i.imgur.com/EKgZUwo.png" alt="Version 4 Plot" width="400"/>
+
+---
+
+## Version 5 - Deeper CNN + Learning Rate Scheduler (85%)
+
+This version significantly improves performance with a deeper CNN and a `ReduceLROnPlateau` learning rate schedule. It uses two convolutional layers per block and more filters, followed by dropout and batch normalization for regularization.
+
+```python
+model = Sequential([
+    Conv2D(32, (3,3), activation='relu', padding='same', input_shape=(32,32,3)),
+    BatchNormalization(),
+    Conv2D(32, (3,3), activation='relu', padding='same'),
+    BatchNormalization(),
+    MaxPooling2D((2,2)),
+    Dropout(0.25),
+
+    Conv2D(64, (3,3), activation='relu', padding='same'),
+    BatchNormalization(),
+    Conv2D(64, (3,3), activation='relu', padding='same'),
+    BatchNormalization(),
+    MaxPooling2D((2,2)),
+    Dropout(0.25),
+
+    Flatten(),
+    Dense(512, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.5),
+    Dense(10, activation='softmax')
+])
+```
+
+Learning rate schedule:
+
+```python
+lr_schedule = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, verbose=1)
+
+history = model.fit(datagen.flow(X_train, y_train, batch_size=64),
+                    validation_data=(X_test, y_test),
+                    epochs=50, 
+                    callbacks=[lr_schedule])
+```
+
+**Training Plot:**
+
+<img src="https://i.imgur.com/QPoFto7.png" alt="Version 5 Plot" width="400"/>
 
 ---
 
 ## Conclusion
 
-Each version builds upon the previous one, introducing improvements that lead to better generalization and higher test accuracy. The CNN architecture provides a significant boost in performance, achieving 75% accuracy on the CIFAR-10 test set.
+Each version builds upon the previous one, introducing improvements that lead to better generalization and higher test accuracy. Version 5, featuring a deeper CNN and learning rate scheduler, achieves the highest performance with 85% test accuracy.
 
 ---
 
@@ -136,7 +182,8 @@ Each version is contained in its own `.ipynb` file. For example:
 cifar_10_classifying_acc41.ipynb  # Version 1
 cifar_10_classifying_acc46.ipynb  # Version 2
 cifar_10_classifying_acc48.ipynb  # Version 3
-cifar_10_classifying_acc75.ipynb  # Version 4
+cifar_10_classifying_acc74.ipynb  # Version 4
+cifar_10_classifying_acc85.ipynb  # Version 5
 ```
 
 You can open and run each notebook using Jupyter or any compatible environment to train and evaluate the corresponding model.
