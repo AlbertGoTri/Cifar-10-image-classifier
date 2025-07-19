@@ -26,7 +26,7 @@ model = Sequential([
 
 **Training Plot:**
 
-![Version 1 Plot](https://imgur.com/XDQwwhQ)
+![Version 1 Plot](https://i.imgur.com/XDQwwhQ.png)
 
 ---
 
@@ -48,7 +48,7 @@ model = Sequential([
 
 **Training Plot:**
 
-![Version 2 Plot](https://imgur.com/xMvszG4)
+![Version 2 Plot](https://i.imgur.com/xMvszG4.png)
 
 ---
 
@@ -75,7 +75,7 @@ def generator_with_flatten(datagen, X, y, batch_size):
 
 **Training Plot:**
 
-![Version 3 Plot](https://imgur.com/QqEQxJS)
+![Version 3 Plot](https://i.imgur.com/QqEQxJS.png)
 
 ---
 
@@ -109,7 +109,7 @@ model = Sequential([
 
 **Training Plot:**
 
-![Version 4 Plot](https://imgur.com/EKgZUwo)
+![Version 4 Plot](https://i.imgur.com/EKgZUwo.png)
 
 ---
 
